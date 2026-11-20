@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3ebdd">
+  <meta name="description" content="Terminal interactiva de Guillermo Pazo. Proyectos de desarrollo web, datos e IA, formación y contribuciones en GitHub.">
+  <title>Guillermo Pazo · Terminal interactiva</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./terminal.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#inicio">Ir al contenido</a>
+  <header class="site-header shell">
+    <a class="identity" href="#inicio"><span class="identity-dot" aria-hidden="true"></span>@gpazop</a>
+    <nav aria-label="Enlaces de Guillermo">
+      <a href="https://mi-primera-web-lilac.vercel.app/">Portafolio <span aria-hidden="true">↗</span></a>
+      <a href="https://github.com/gpazop">GitHub <span aria-hidden="true">↗</span></a>
+    </nav>
+  </header>
+  <main class="shell" id="inicio">
+    <section class="intro" aria-labelledby="nombre">
+      <div class="intro-copy">
+        <p class="eyebrow">Ingeniería de Sistemas · UCV</p>
+        <h1 id="nombre">Guillermo <em>Pazo</em></h1>
+        <p class="intro-description">Desarrollo aplicaciones web y exploro datos e IA con Python. También me formo en AWS.</p>
+        <a class="primary-link" href="#terminal">Explorar la terminal <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="portrait" aria-hidden="true">
+        <span class="portrait-ring"></span>
+        <img src="./assets/retrato.png" width="541" height="560" alt="" fetchpriority="high">
+      </div>
+    </section>
+
+    <section class="terminal" id="terminal" aria-labelledby="terminal-title">
+      <header class="terminal-header">
+        <div>
+          <p class="terminal-name" aria-hidden="true">gpazop@github</p>
+          <h2 id="terminal-title">Terminal interactiva</h2>
+        </div>
+        <p>Elige una sección o escribe <code>ayuda</code>.</p>
+      </header>
+      <div class="command-list" aria-label="Comandos rápidos">
+        <button type="button" data-command="perfil">Perfil</button>
+        <button type="button" data-command="proyectos">Proyectos</button>
+        <button type="button" data-command="formación">Formación</button>
+        <button type="button" data-command="actividad">Actividad</button>
+        <button type="button" data-command="enlaces">Enlaces</button>
+      </div>
+      <div class="history" id="historial" role="log" aria-label="Respuestas de la terminal" aria-relevant="additions text" tabindex="0"></div>
+      <form class="command-form" autocomplete="off">
+        <label for="comando" class="sr-only">Comando</label>
+        <span class="prompt" aria-hidden="true">~ $</span>
+        <input id="comando" name="comando" type="text" placeholder="Escribe un comando" spellcheck="false" autocapitalize="none" enterkeyhint="go">
+        <button type="submit">Ejecutar <span aria-hidden="true">↵</span></button>
+      </form>
+      <noscript>
+        <p class="no-script">Puedes ver mis proyectos, formación y actividad en <a href="https://github.com/gpazop">mi perfil de GitHub</a>.</p>
+      </noscript>
+    </section>
+  </main>
+</body>
+</html>
