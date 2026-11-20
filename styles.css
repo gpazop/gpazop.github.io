@@ -20,12 +20,12 @@
   --oat: #f3ebdd;
   --forest: #204638;
   --tomato: #bc352a;
-  --navy: #0b2041;
-  --bar: #142d51;
-  --rule: #436187;
-  --ink: #f1f6ff;
-  --quiet: #b8c9de;
-  --accent: #a1d2ff;
+  --screen: #151e1b;
+  --bar: #1e2a25;
+  --rule: #486357;
+  --ink: #edf4e9;
+  --quiet: #afc2b3;
+  --accent: #a8e5bf;
   --display: "Instrument Serif", Georgia, serif;
   --mono: "Geist Mono", ui-monospace, monospace;
   background: var(--oat);
@@ -59,12 +59,12 @@ img { display: block; max-width: 100%; }
 .terminal {
   color-scheme: dark;
   overflow: hidden;
-  background: var(--navy);
+  background: var(--screen);
   color: var(--ink);
   border: 1px solid var(--rule);
   border-radius: 11px;
   font: clamp(.82rem, 1.6vw, .96rem)/1.62 var(--mono);
-  box-shadow: 0 12px 28px rgb(11 32 65 / 19%);
+  box-shadow: 0 12px 28px rgb(21 30 27 / 19%);
 }
 .terminal-header {
   display: flex;
@@ -76,11 +76,11 @@ img { display: block; max-width: 100%; }
   border-bottom: 1px solid var(--rule);
   background: var(--bar);
 }
-.terminal-header h2 { margin: 0; font: 400 1rem/1.45 var(--mono); }
-.terminal-header p { margin: 0; color: var(--quiet); font-size: .78rem; }
-.terminal-header code { color: var(--accent); font: inherit; }
+.terminal-header h2 { display: flex; align-items: center; gap: 10px; margin: 0; font: 400 .9rem/1.45 var(--mono); }
+.terminal-icon { color: var(--accent); font-size: 1.15rem; line-height: 1; }
+.terminal-path { color: var(--quiet); font-size: .8rem; }
 
-.command-list { display: flex; flex-wrap: wrap; gap: 7px; padding: 11px 17px; border-bottom: 1px solid var(--rule); }
+.command-list { display: flex; flex-wrap: wrap; gap: 7px; padding: 9px 17px; border-top: 1px solid var(--rule); background: var(--bar); }
 .command-list button {
   border: 1px solid var(--rule);
   border-radius: 4px;
@@ -89,26 +89,58 @@ img { display: block; max-width: 100%; }
   padding: 5px 10px;
   font-size: .8rem;
 }
-.command-list button:hover { background: var(--bar); color: var(--ink); border-color: var(--accent); }
+.command-list button:is(:hover, [aria-pressed="true"]) { background: var(--screen); color: var(--ink); border-color: var(--accent); }
 
+.terminal-screen { position: relative; isolation: isolate; }
 .history {
   height: clamp(220px, 49svh, 550px);
   overflow: auto;
   overscroll-behavior: contain;
-  scrollbar-color: var(--rule) var(--navy);
+  overflow-wrap: anywhere;
+  scrollbar-color: var(--rule) var(--screen);
   padding: 15px 17px;
 }
 .history:focus-visible { outline-offset: -3px; }
 .result + .result { border-top: 1px solid var(--rule); margin-top: 14px; padding-top: 12px; }
 .history p { margin: 5px 0; }
 .history h3 { margin: 2px 0 7px; font: 600 1em/1.5 var(--mono); }
-.history .echo { color: var(--quiet); }
+.history .echo { color: var(--accent); }
 .history a { color: var(--accent); text-underline-offset: 3px; }
 .history a:hover { color: var(--ink); }
 .history ul { padding-left: 22px; margin: 8px 0; }
 .history li + li { margin-top: 5px; }
 .history .chart { width: min(100%, 880px); height: auto; margin-block: 8px; }
 .history .chart-summary { max-width: 77ch; font-size: .9em; }
+.history .command-help {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 16px;
+  margin-block: 7px;
+}
+.command-help dt { color: var(--accent); }
+.command-help dd { margin: 0; }
+
+.terminal.matrix-mode {
+  --screen: #0d2015;
+  --bar: #153020;
+  --rule: #367647;
+  --ink: #ccf8d2;
+  --quiet: #9dc9a3;
+  --accent: #a2faa2;
+}
+.matrix-mode .terminal-screen::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(to bottom, transparent 0 5px, rgb(162 250 162 / 9%) 5px 6px);
+  animation: scanlines 1.8s linear infinite;
+}
+@keyframes scanlines { to { background-position: 0 6px; } }
+@media (prefers-reduced-motion: reduce) {
+  .matrix-mode .terminal-screen::before { animation: none; }
+}
 
 .command-form {
   display: grid;
@@ -132,7 +164,7 @@ img { display: block; max-width: 100%; }
 .command-form button {
   border: 1px solid var(--accent);
   border-radius: 4px;
-  color: var(--navy);
+  color: var(--screen);
   background: var(--accent);
   padding: 5px 10px;
   font-size: .78rem;
@@ -148,4 +180,6 @@ img { display: block; max-width: 100%; }
   .command-form { grid-template-columns: minmax(0, 1fr) auto; }
   .prompt { grid-column: 1 / -1; }
   .command-form input { font-size: 1rem; }
+  .history .command-help { grid-template-columns: 1fr; gap: 2px; }
+  .command-help dd + dt { margin-top: 7px; }
 }

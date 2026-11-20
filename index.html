@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#f3ebdd">
   <meta name="description" content="Terminal interactiva de Guillermo Pazo. Proyectos de desarrollo web, datos e IA, formación y contribuciones en GitHub.">
   <title>Guillermo Pazo · Terminal interactiva</title>
-  <link rel="stylesheet" href="./styles.css?v=2">
-  <script src="./terminal.js?v=2" defer></script>
+  <link rel="stylesheet" href="./styles.css?v=3">
+  <script src="./terminal.js?v=3" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#inicio">Ir al contenido</a>
@@ -15,23 +15,24 @@
     <h1 class="profile-name">Guillermo <em>Pazo</em></h1>
     <section class="terminal" id="terminal" aria-labelledby="terminal-title">
       <header class="terminal-header">
-        <h2 id="terminal-title">Terminal interactiva</h2>
-        <p>Escribe <code>ayuda</code> o elige un comando.</p>
+        <h2 id="terminal-title"><span class="terminal-icon" aria-hidden="true">›_</span>Terminal interactiva</h2>
+        <span class="terminal-path">~/perfil</span>
       </header>
-      <div class="command-list" aria-label="Comandos rápidos">
-        <button type="button" data-command="perfil">Perfil</button>
-        <button type="button" data-command="proyectos">Proyectos</button>
-        <button type="button" data-command="formación">Formación</button>
-        <button type="button" data-command="actividad">Actividad</button>
-        <button type="button" data-command="enlaces">Enlaces</button>
+      <div class="terminal-screen">
+        <div class="history" id="historial" role="log" aria-label="Respuestas de la terminal" aria-relevant="additions text" tabindex="0"></div>
       </div>
-      <div class="history" id="historial" role="log" aria-label="Respuestas de la terminal" aria-relevant="additions text" tabindex="0"></div>
       <form class="command-form" autocomplete="off">
         <label for="comando" class="sr-only">Comando</label>
-        <span class="prompt" aria-hidden="true">PS C:\gpazop&gt;</span>
-        <input id="comando" name="comando" type="text" placeholder="Escribe un comando" spellcheck="false" autocapitalize="none" enterkeyhint="go">
+        <span class="prompt" aria-hidden="true">gpazop@github:~$</span>
+        <input id="comando" name="comando" type="text" placeholder="Escribe help para empezar" spellcheck="false" autocapitalize="none" enterkeyhint="go">
         <button type="submit">Ejecutar <span aria-hidden="true">↵</span></button>
       </form>
+      <div class="command-list" aria-label="Comandos rápidos">
+        <button type="button" data-command="help">help</button>
+        <button type="button" data-command="proyectos">proyectos</button>
+        <button type="button" data-command="actividad">actividad</button>
+        <button type="button" data-command="matrix" aria-pressed="false">matrix</button>
+      </div>
       <noscript>
         <p class="no-script">Puedes ver mis proyectos, formación y actividad en <a href="https://github.com/gpazop">mi perfil de GitHub</a>.</p>
       </noscript>

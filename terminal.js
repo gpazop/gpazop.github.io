@@ -3,8 +3,10 @@
 const form = document.querySelector(".command-form");
 const promptText = form.querySelector(".prompt").textContent.trim();
 const input = document.querySelector("#comando");
+const terminal = document.querySelector("#terminal");
 const historyView = document.querySelector("#historial");
 const buttons = document.querySelectorAll("[data-command]");
+const matrixButton = document.querySelector('[data-command="matrix"]');
 const commandHistory = [];
 let historyPosition = 0;
 
@@ -85,16 +87,53 @@ function showActivity(result) {
   );
 }
 
+function showStreak(result) {
+  const summary = element("p", "Consultando el último conteo publicado…");
+  result.append(summary, link("Ver mis contribuciones", profile));
+  chartTitle(cardsUrl + "contribuciones.svg").then(
+    (title) => {
+      const streak = title.match(/Mejor racha de ([\d.]+ d[ií]as?)/i)?.[1];
+      summary.textContent = streak ? streak + " seguidos con contribuciones en los últimos 12 meses." : title;
+    },
+    () => { summary.textContent = "El conteo está temporalmente indisponible."; }
+  );
+}
+
+function showHelp(result) {
+  const list = element("dl", "", "command-help");
+  const topics = [
+    ["whoami · perfil", "Lee mi presentación."],
+    ["experience · experiencia", "Consulta mi experiencia de campo."],
+    ["skills · habilidades", "Explora las tecnologías de mis proyectos."],
+    ["projects · proyectos", "Abre mis repositorios destacados."],
+    ["contributions · actividad", "Muestra mis contribuciones diarias y mensuales."],
+    ["streak · racha", "Consulta mi mejor racha en GitHub."],
+    ["formación", "Consulta mis estudios, cursos e insignias."],
+    ["contact · enlaces", "Abre mi portafolio y GitHub."],
+    ["matrix", "Activa o desactiva el modo Matrix."],
+    ["clear · limpiar", "Limpia la consola."],
+  ];
+  for (const [name, description] of topics) {
+    list.append(element("dt", name), element("dd", description));
+  }
+  result.append(list);
+}
+
 const commands = {
-  ayuda: ["Comandos disponibles", (result) => {
-    result.append(element("p", "perfil · proyectos · formación · actividad · enlaces · limpiar"));
-  }],
+  ayuda: ["Comandos disponibles", showHelp],
   perfil: ["Sobre mí", (result) => {
-    result.append(element("p", "Estudio Ingeniería de Sistemas en la Universidad César Vallejo. Desarrollo aplicaciones web y exploro datos e IA con Python. También tengo experiencia de campo en el INEI, incluida la coordinación de equipos para recopilar datos censales."));
+    result.append(element("p", "Estudio Ingeniería de Sistemas en la Universidad César Vallejo. Desarrollo aplicaciones web, exploro datos e IA con Python y me formo en AWS."));
+  }],
+  experiencia: ["Experiencia", (result) => {
+    result.append(element("p", "En el INEI coordiné y supervisé equipos de campo para recopilar datos censales en Piura. También participé en la aplicación de evaluaciones educativas."));
+  }],
+  habilidades: ["Tecnologías", (result) => {
+    result.append(element("p", "React y JavaScript para desarrollo web. NumPy, Pygame y Streamlit para mis proyectos de datos e IA. Formación en fundamentos, redes y DevOps en AWS."));
   }],
   proyectos: ["Proyectos destacados", (result) => result.append(projectList())],
   formacion: ["Formación", (result) => result.append(trainingList())],
   actividad: ["Actividad en GitHub", showActivity],
+  racha: ["Mejor racha", showStreak],
   enlaces: ["Dónde encontrarme", (result) => {
     const list = element("ul");
     for (const [name, url] of [["GitHub", profile], ["Portafolio", portfolio], ["Repositorios", profile + "?tab=repositories"]]) {
@@ -104,7 +143,21 @@ const commands = {
     }
     result.append(list);
   }],
+  matrix: ["Modo Matrix", (result) => {
+    const enabled = terminal.classList.toggle("matrix-mode");
+    matrixButton.setAttribute("aria-pressed", String(enabled));
+    result.append(element("p", enabled ? "Activado. Escribe matrix para volver." : "Desactivado."));
+  }],
 };
+
+const aliases = new Map([
+  ["help", "ayuda"], ["whoami", "perfil"], ["about", "perfil"],
+  ["experience", "experiencia"], ["skills", "habilidades"],
+  ["projects", "proyectos"], ["ls", "proyectos"],
+  ["contributions", "actividad"], ["streak", "racha"],
+  ["contact", "enlaces"], ["clear", "limpiar"],
+]);
+const commandNames = [...Object.keys(commands), "limpiar", ...aliases.keys()];
 
 function commandKey(value) {
   return value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -113,7 +166,8 @@ function commandKey(value) {
 function runCommand(value, remember = true) {
   const entered = value.trim();
   if (!entered) return;
-  const key = commandKey(entered);
+  const typedKey = commandKey(entered);
+  const key = aliases.get(typedKey) ?? typedKey;
   if (remember) {
     commandHistory.push(entered);
     if (commandHistory.length > 40) commandHistory.shift();
@@ -130,7 +184,7 @@ function runCommand(value, remember = true) {
     result.append(element("h3", title));
     render(result);
   } else {
-    result.append(element("p", "Comando desconocido. Escribe ayuda para ver las opciones."));
+    result.append(element("p", "Comando desconocido. Escribe help o ayuda para ver las opciones."));
   }
   historyView.append(result);
   if (historyView.children.length > 20) historyView.firstElementChild.remove();
@@ -149,6 +203,17 @@ for (const button of buttons) {
 }
 
 input.addEventListener("keydown", (event) => {
+  if (event.key === "Tab" && !event.shiftKey) {
+    const typed = commandKey(input.value.trim());
+    if (typed && !commandNames.includes(typed)) {
+      const matches = commandNames.filter((command) => command.startsWith(typed));
+      if (matches.length === 1) {
+        event.preventDefault();
+        input.value = matches[0];
+      }
+    }
+    return;
+  }
   if (event.key !== "ArrowUp" && event.key !== "ArrowDown") return;
   event.preventDefault();
   const movement = event.key === "ArrowUp" ? -1 : 1;
@@ -156,4 +221,4 @@ input.addEventListener("keydown", (event) => {
   input.value = commandHistory[historyPosition] ?? "";
 });
 
-runCommand("proyectos", false);
+runCommand("whoami", false);
