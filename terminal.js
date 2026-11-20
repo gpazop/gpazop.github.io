@@ -1,6 +1,7 @@
 "use strict";
 
 const form = document.querySelector(".command-form");
+const promptText = form.querySelector(".prompt").textContent.trim();
 const input = document.querySelector("#comando");
 const historyView = document.querySelector("#historial");
 const buttons = document.querySelectorAll("[data-command]");
@@ -123,7 +124,7 @@ function runCommand(value, remember = true) {
     return;
   }
   const result = element("article", "", "result");
-  if (remember) result.append(element("p", "~ $ " + entered, "echo"));
+  if (remember) result.append(element("p", promptText + " " + entered, "echo"));
   if (Object.hasOwn(commands, key)) {
     const [title, render] = commands[key];
     result.append(element("h3", title));
